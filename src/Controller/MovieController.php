@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Consumer\OMDbApiConsumer;
 use App\Entity\Movie;
+use App\Provider\MovieProvider;
 use App\Repository\MovieRepository;
 use App\Transformer\OmdbMovieTransformer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -30,12 +31,10 @@ class MovieController extends AbstractController
     }
 
     #[Route('/omdb/{title}', name: 'omdb')]
-    public function omdb(string $title, OMDbApiConsumer $consumer, OmdbMovieTransformer $movieTransformer): Response
+    public function omdb(string $title, MovieProvider $provider): Response
     {
         return $this->render('movie/details.html.twig', [
-            'movie' => $movieTransformer->transform(
-                $consumer->consume('t', $title)
-            )
+            'movie' => $provider->getMovie(OMDbApiConsumer::MODE_TITLE, $title),
         ]);
     }
 }
