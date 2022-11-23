@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Book;
 use App\Form\BookType;
 use App\Repository\BookRepository;
+use App\Security\Voter\BookVoter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -26,7 +27,7 @@ class BookController extends AbstractController
 //    #[Route('/{id}', name: 'show', requirements: ['id' => '\d+'], defaults: ['id' => 1], methods: ['GET'])]
     public function show(Book $book): Response
     {
-        // $this->denyAccessUnlessGranted('book.view', $book);
+        $this->denyAccessUnlessGranted(BookVoter::VIEW, $book);
         return $this->render('book/details.html.twig', [
             'book' => $book,
         ]);

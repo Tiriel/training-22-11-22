@@ -3,6 +3,16 @@ security:
     password_hashers:
         Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
     # https://symfony.com/doc/current/security.html#loading-the-user-the-user-provider
+    access_decision_manager:
+        strategy: affirmative # priority, consensus, unanimous
+        allow_if_all_abstain: false
+    role_hierarchy:
+        ROLE_USER: ~
+        ROLE_MODERATOR: ROLE_USER
+        ROLE_PROVIDER: ROLE_USER
+        ROLE_ADMIN:
+            - ROLE_PROVIDER
+            - ROLE_MODERATOR
     providers:
         # used to reload user from session & other features (e.g. switch_user)
         app_user_provider:
