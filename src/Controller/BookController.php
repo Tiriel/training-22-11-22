@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Book;
 use App\Form\BookType;
 use App\Repository\BookRepository;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -12,6 +13,7 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/book', name: 'app_book_')]
 class BookController extends AbstractController
 {
+    #[IsGranted('ROLE_ADMIN')]
     #[Route('', name: 'index')]
     public function index(BookRepository $repository): Response
     {
@@ -24,6 +26,7 @@ class BookController extends AbstractController
 //    #[Route('/{id}', name: 'show', requirements: ['id' => '\d+'], defaults: ['id' => 1], methods: ['GET'])]
     public function show(Book $book): Response
     {
+        // $this->denyAccessUnlessGranted('book.view', $book);
         return $this->render('book/details.html.twig', [
             'book' => $book,
         ]);
@@ -34,6 +37,9 @@ class BookController extends AbstractController
     {
         $book = new Book();
         $bookForm = $this->createForm(BookType::class, $book);
+        if ($this->isGranted('ROLE_ADMIN')) {
+            //
+        }
 
         return $this->renderForm('book/new.html.twig', [
             'bookForm' => $bookForm,

@@ -4,9 +4,11 @@ namespace App\Provider;
 
 use App\Consumer\OMDbApiConsumer;
 use App\Entity\Movie;
+use App\Entity\User;
 use App\Repository\MovieRepository;
 use App\Transformer\OmdbMovieTransformer;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Component\Security\Core\Security;
 
 class MovieProvider
 {
@@ -16,7 +18,8 @@ class MovieProvider
         private OMDbApiConsumer $consumer,
         private OmdbMovieTransformer $movieTransformer,
         private MovieRepository $repository,
-        private GenreProvider $genreProvider
+        private GenreProvider $genreProvider,
+        private Security $security
     ) {}
 
     public function getMovie(string $type, string $value): Movie
@@ -36,6 +39,9 @@ class MovieProvider
         }
 
         $this->io?->section('Saving new movie in database');
+        if (($user = $this->security->getUser()) instanceof User) {
+            $movie->setCreatedBy($user);
+        }
         $this->repository->add($movie, true);
         $this->io?->text('Movie saved.');
 
