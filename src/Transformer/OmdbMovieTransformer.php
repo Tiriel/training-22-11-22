@@ -7,7 +7,7 @@ use Symfony\Component\Form\DataTransformerInterface;
 
 class OmdbMovieTransformer implements DataTransformerInterface
 {
-    public function transform(mixed $value)
+    public function transform(mixed $value): Movie
     {
         $date = $value['Released'] === 'N/A' ? $value['Year'] : $value['Released'];
 
@@ -22,7 +22,7 @@ class OmdbMovieTransformer implements DataTransformerInterface
             ;
     }
 
-    public function reverseTransform(mixed $value)
+    public function reverseTransform(mixed $value): mixed
     {
         throw new \RuntimeException("Not implemented.");
     }
