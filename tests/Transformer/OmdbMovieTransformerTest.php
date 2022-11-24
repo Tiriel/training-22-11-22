@@ -8,38 +8,11 @@ use PHPUnit\Framework\TestCase;
 
 class OmdbMovieTransformerTest extends TestCase
 {
-    public function testTransformerReturnsMovieEntity(): void
+    /**
+     * @dataProvider provideDataForTransformMethod
+     */
+    public function testTransformerReturnsMovieEntity(array $data): void
     {
-        $data = [
-            'Title' => 'Star Wars',
-            'Poster' => 'https://foo.com',
-            'Country' => 'United States',
-            'Rated' => 'PG',
-            'imdbID' => 'tt12984208',
-            'Released' => '25 May 1977',
-            'Year' => '1977',
-        ];
-
-        $transformer = new OmdbMovieTransformer();
-        $actual = $transformer->transform($data);
-
-        $this->assertInstanceOf(Movie::class, $actual);
-        $this->assertSame('Star Wars', $actual->getTitle());
-        $this->assertInstanceOf(\DateTimeImmutable::class, $actual->getReleasedAt());
-    }
-
-    public function testTransformerTakesYearWhenReleasedNotAvailable()
-    {
-        $data = [
-            'Title' => 'Star Wars',
-            'Poster' => 'https://foo.com',
-            'Country' => 'United States',
-            'Rated' => 'PG',
-            'imdbID' => 'tt12984208',
-            'Released' => 'N/A',
-            'Year' => '1977',
-        ];
-
         $transformer = new OmdbMovieTransformer();
         $actual = $transformer->transform($data);
 
@@ -50,6 +23,30 @@ class OmdbMovieTransformerTest extends TestCase
             (new \DateTimeImmutable('01-01-1977'))->format('Y'),
             $actual->getReleasedAt()->format('Y')
         );
+    }
+
+    public function provideDataForTransformMethod()
+    {
+        return [
+            'Released' => [[
+                'Title' => 'Star Wars',
+                'Poster' => 'https://foo.com',
+                'Country' => 'United States',
+                'Rated' => 'PG',
+                'imdbID' => 'tt12984208',
+                'Released' => '25 May 1977',
+                'Year' => '1977',
+            ]],
+            'Year' => [[
+                'Title' => 'Star Wars',
+                'Poster' => 'https://foo.com',
+                'Country' => 'United States',
+                'Rated' => 'PG',
+                'imdbID' => 'tt12984208',
+                'Released' => 'N/A',
+                'Year' => '1977',
+            ]]
+        ];
     }
 
     public function testTransformerThrowsInvalidArgumentWhenNotArray()
