@@ -17,18 +17,25 @@ class DefaultControllerTest extends WebTestCase
     }
 
     /**
-     * @dataProvider providePublicUrlsAndStatusCodes
+     * @dataProvider providerStaticUrls
      * @group smoke
      */
     public function testPublicUrlIsNotServerError(string $method, string $url): void
     {
-        $this->markTestSkipped();
         static::$client->request($method, $url);
         if (\in_array(static::$client->getResponse()->getStatusCode(), [301, 302, 307, 308])) {
             static::$client->followRedirect();
         }
 
         $this->assertSame(200, static::$client->getResponse()->getStatusCode());
+    }
+
+    public function providerStaticUrls(): array
+    {
+        return [
+            'contact' => ['GET', '/contact'],
+            'book' => ['GET', '/book'],
+        ];
     }
 
     public function providePublicUrlsAndStatusCodes(): \Generator

@@ -15,4 +15,12 @@ class OmdbGenreTransformerTest extends TestCase
 
         $this->assertInstanceOf(Genre::class, $actual);
     }
+
+    public function testTransformerThrowOnInvalidArgument()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+
+        $transformer = new OmdbGenreTransformer();
+        $transformer->transform(['Action']);
+    }
 }

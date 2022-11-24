@@ -8,7 +8,7 @@ use PHPUnit\Framework\TestCase;
 
 class OmdbMovieTransformerTest extends TestCase
 {
-    public function testSomething(): void
+    public function testTransformerReturnsMovieEntity(): void
     {
         $data = [
             'Title' => 'Star Wars',
@@ -17,6 +17,7 @@ class OmdbMovieTransformerTest extends TestCase
             'Rated' => 'PG',
             'imdbID' => 'tt12984208',
             'Released' => '25 May 1977',
+            'Year' => '1977',
         ];
 
         $transformer = new OmdbMovieTransformer();
@@ -49,5 +50,21 @@ class OmdbMovieTransformerTest extends TestCase
             (new \DateTimeImmutable('01-01-1977'))->format('Y'),
             $actual->getReleasedAt()->format('Y')
         );
+    }
+
+    public function testTransformerThrowsInvalidArgumentWhenNotArray()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+
+        $transformer = new OmdbMovieTransformer();
+        $transformer->transform('Action');
+    }
+
+    public function testTransformerThrowsInvalidArgumentExceptionWhenMissingKey()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+
+        $transformer = new OmdbMovieTransformer();
+        $transformer->transform([]);
     }
 }

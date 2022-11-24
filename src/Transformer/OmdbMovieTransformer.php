@@ -7,8 +7,27 @@ use Symfony\Component\Form\DataTransformerInterface;
 
 class OmdbMovieTransformer implements DataTransformerInterface
 {
+    private const KEYS = [
+        'Title',
+        'Poster',
+        'Country',
+        'Released',
+        'Year',
+        'Rated',
+        'imdbID',
+    ];
+
     public function transform(mixed $value): Movie
     {
+        if (!\is_array($value)) {
+            throw new \InvalidArgumentException();
+        }
+        foreach (self::KEYS as $key) {
+            if (!array_key_exists($key, $value)) {
+                throw new \InvalidArgumentException();
+            }
+        }
+
         $date = $value['Released'] === 'N/A' ? $value['Year'] : $value['Released'];
 
         return (new Movie())
