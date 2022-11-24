@@ -20,7 +20,7 @@ class DefaultControllerTest extends WebTestCase
     }
 
     /**
-     * @dataProvider providerStaticUrls
+     * @dataProvider providePublicUrlsAndStatusCodes
      * @group smoke
      */
     public function testPublicUrlIsNotServerError(string $method, string $url): void

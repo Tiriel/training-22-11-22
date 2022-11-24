@@ -27,7 +27,16 @@ class GenreProviderTest extends TestCase
             ->onlyMethods(['findOneBy'])
             ->getMock()
             ;
-        $mockRepository->expects($this->exactly(2))->method('findOneBy')->willReturn(null);
+        $mockRepository
+            ->expects($this->exactly(2))
+            ->method('findOneBy')
+            ->willReturnCallback(function () {
+                $args = func_get_args();
+                if ($args[0] === ['name' => 'Action']) {
+                    return (new Genre())->setName('Action');
+                }
+                return null;
+            });
         $provider = new GenreProvider($transformer, $mockRepository);
 
         $genres = $provider->getGenresFromString('Foo, Bar');
