@@ -2,6 +2,7 @@
 
 namespace App\Tests\Controller;
 
+use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\Routing\Route;
@@ -14,6 +15,8 @@ class DefaultControllerTest extends WebTestCase
     public static function setUpBeforeClass(): void
     {
         static::$client = static::createClient();
+        //$repository = static::getContainer()->get(UserRepository::class);
+        //static::$client->loginUser($repository->findOneBy(['email' => 'john.doe@example.org']));
     }
 
     /**

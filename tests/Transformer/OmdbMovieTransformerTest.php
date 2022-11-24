@@ -8,13 +8,19 @@ use PHPUnit\Framework\TestCase;
 
 class OmdbMovieTransformerTest extends TestCase
 {
+    private static OmdbMovieTransformer $transformer;
+
+    public static function setUpBeforeClass(): void
+    {
+        static::$transformer = new OmdbMovieTransformer();
+    }
+
     /**
      * @dataProvider provideDataForTransformMethod
      */
     public function testTransformerReturnsMovieEntity(array $data): void
     {
-        $transformer = new OmdbMovieTransformer();
-        $actual = $transformer->transform($data);
+        $actual = static::$transformer->transform($data);
 
         $this->assertInstanceOf(Movie::class, $actual);
         $this->assertSame('Star Wars', $actual->getTitle());
